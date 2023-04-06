@@ -1,0 +1,12 @@
+package com.edu.wepet.model.prereservation;
+
+import java.util.List;
+
+public interface PreReservationDAO {
+	
+	public void insert(Holiday holiday);
+	public List selectAll();
+	public Holiday select(int holiday_idx);
+	public void delete(Holiday holiday);
+
+}

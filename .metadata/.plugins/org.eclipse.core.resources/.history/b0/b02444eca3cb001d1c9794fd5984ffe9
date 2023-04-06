@@ -1,0 +1,5 @@
+package com.edu.wepet.model.holiday;
+
+public class PreReservationService {
+
+}

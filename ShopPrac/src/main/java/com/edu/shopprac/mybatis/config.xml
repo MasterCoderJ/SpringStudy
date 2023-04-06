@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	
+	<typeAliases>
+		<typeAlias type="com.edu.shopprac.domain.Category" alias="Category"/>
+		<typeAlias type="com.edu.shopprac.domain.Product" alias="Product"/>
+		<typeAlias type="com.edu.shopprac.domain.Pimg" alias="Pimg"/>
+		<typeAlias type="com.edu.shopprac.domain.Cart" alias="Cart"/>
+		<typeAlias type="com.edu.shopprac.domain.Member" alias="Member"/>
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="com/edu/shopprac/mybatis/CategoryMapper.xml" />
+		<mapper resource="com/edu/shopprac/mybatis/ProductMapper.xml" />
+		<mapper resource="com/edu/shopprac/mybatis/PimgMapper.xml" />
+		<mapper resource="com/edu/shopprac/mybatis/CartMapper.xml" />
+		<mapper resource="com/edu/shopprac/mybatis/MemberMapper.xml" />
+	</mappers>
+</configuration>

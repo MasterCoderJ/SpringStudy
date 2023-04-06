@@ -1,0 +1,40 @@
+package com.edu.wepet.model.prereservation;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.edu.wepet.domain.PreReservation;
+
+@Service
+public class PreReservationServiceImpl implements PreReservationService{
+	
+	@Autowired
+	private PreReservationDAO preReservationDAO;
+
+	@Override
+	public void insert(PreReservation preReservation) {
+
+		
+	}
+
+	@Override
+	public List selectAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PreReservation select(int prereservation_idx) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void delete(PreReservation preReservation) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

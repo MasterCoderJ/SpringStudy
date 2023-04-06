@@ -1,0 +1,5 @@
+package com.edu.wepet.mybatis;
+
+public class ReservationMapper {
+
+}

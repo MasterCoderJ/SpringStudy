@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd
+		">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	<context:component-scan base-package="com.edu.springshop.shop.controller" />
+	
+	<!-- 학생을 등록한다 -->
+	<beans:bean id="student" class="com.edu.springshop.school.Student"/>
+	
+	<!-- 공통관심사항인 벨을 Advice로 등록 -->
+	<beans:bean id="bell" class="com.edu.springshop.aop.Bell"/>
+
+	<!-- 공통관심 사항인 CategoryAdvice를 advice로 등록 -->
+	<beans:bean id="categoryAdvice" class="com.edu.springshop.aop.CategoryAdvice"/>
+	
+	<!-- 관점(Aspect)을 정의한다 -->
+<!-- 	<aop:config> -->
+<!-- 		<aop:aspect ref="bell" id="bellAspect"> -->
+
+ 			<!-- 지점 등록 -->
+<!-- 			<aop:pointcut expression="execution(public * com.edu.springshop.school.Student..*())" id="bellPointcut"/> -->
+			
+ 			<!-- 시점 등록, 어느 지점에 등록할지 -->
+<!-- 			<aop:before method="ding" pointcut-ref="bellPointcut"/> -->
+<!-- 		</aop:aspect> -->
+<!-- 	</aop:config> -->
+
+	<!-- 쇼핑몰의 카테고리 가져오기 관점 정의 -->
+	<aop:config>
+		<aop:aspect ref="categoryAdvice" id="catgoryAspect">
+			<aop:pointcut expression="execution(public * com.edu.springshop.shop.controller..*(..))" id="categoryPointcut"/>
+			<aop:around method="getCategoryList" pointcut-ref="categoryPointcut"/>
+		</aop:aspect>
+	</aop:config>
+	
+	
+	
+	
+	
+</beans:beans>

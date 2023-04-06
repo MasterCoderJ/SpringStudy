@@ -1,0 +1,48 @@
+package com.edu.wepet.model.prereservation;
+
+import java.util.List;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.edu.wepet.domain.PreReservation;
+import com.edu.wepet.exception.PreReservationException;
+
+@Repository
+public class MyBatisPreReservationDAO implements PreReservationDAO{
+
+	@Autowired
+	private SqlSessionTemplate sqlSessionTemplate;
+
+	
+	@Override
+	public void insert(PreReservation preReservation) throws PreReservationException{
+		
+		int result= sqlSessionTemplate.insert("PreReservation.insert", preReservation);
+		
+		if(result<1) {
+			throw new PreReservationException("예약등록실패");
+		}
+		
+	}
+
+	@Override
+	public List selectAll() {
+
+		return null;
+	}
+
+	@Override
+	public PreReservation select(int prereservation_idx) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void delete(PreReservation preReservation) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

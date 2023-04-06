@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PreReservation">
+
+		<insert id="insert" parameterType="PreReservation">
+		insert into prereservation(yy, mm, dd,pet_kind,pet_number,client_content,fee) 
+		values(#{yy},#{mm},#{dd},#{pet_kind},#{pet_number},#{client_content},#{fee})
+	</insert>
+	
+	<select id="selectAll" resultType="PreReservation">
+		select * from prereservation order by prereservation_idx desc
+	</select>
+	
+	<select id="select" resultType="PreReservation" parameterType="int">
+		select * from prereservation where prereservation_idx=#{prereservation_idx}
+	</select>
+	
+	<delete id="delete" parameterType="PreReservation">
+		delete from prereservation where dd=#{dd}
+	</delete>
+
+</mapper>

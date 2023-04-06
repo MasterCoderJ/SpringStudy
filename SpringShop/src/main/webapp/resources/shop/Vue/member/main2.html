@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script
+	src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script
+	src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+	
+	
+	<script type="text/javascript">
+	let tablespace;
+	let Member={
+			
+			template:`
+			<tr>
+				<td>{{this.member_idx}}</td>
+				<td>{{this.id}}</td>
+				<td>{{this.name}}</td>
+				<td>{{this.email}}</td>
+			</tr>
+			`,
+			props:['member_idx','id','name','email'],
+			data(){
+				return{
+					member_idx:this.member_idx,
+					id:this.id,
+					name:this.name,
+					email:this.email
+				}
+			}
+		
+		
+			
+	}
+	
+	function init(){
+		tablespace = new Vue({
+			el:"#tablespace",
+			components:{
+				"member":Member
+			},
+			data:{
+				memberList:[]
+			}
+		});
+	}
+	
+	function getMemberList(){
+		   $.ajax({
+		   		url:"/Vue/member/list.jsp",
+		   		type:"get",
+		   		success:function(result , status, xhr){
+		   			console.log(result);
+		   			tablespace.memberList=result;
+		   		}
+		   });
+	}
+	function regist(){
+		
+		$.ajax({
+			type : 'post',
+			url : '/Vue/member/regist.jsp',
+			data : $("#form1").serialize()
+			
+		});
+			
+	}
+	
+	$(function(){
+		init();
+		getMemberList();
+		
+		$("#bt_regist").click(function(){
+			regist();
+		});
+		
+	});
+		
+	
+	
+	</script>
+	
+
+</head>
+<body>
+<div id="tablespace">
+	<div class="container">
+		<form action="/action_page.php" id="form1">
+				<div class="form-group">
+					<label for="id1">ID:</label> <input type="text"
+						class="form-control" id="id1" placeholder="Enter ID"
+						name="id1">
+				</div>
+				<label for="password1">Password:</label> <input type="password"
+					class="form-control" id="password1" placeholder="Enter password"
+					name="password1">
+			<div class="form-group">
+				<label for="name1">Name:</label> <input type="text"
+					class="form-control" id="name1" placeholder="Enter Name"
+					name="name1">
+			</div>
+			<div class="form-group">
+				<label for="email1">EMail:</label> <input type="email"
+					class="form-control" id="email1" placeholder="Enter email"
+					name="email1">
+			</div>
+			
+		</form>
+			<button type="button" class="btn btn-primary" id="bt_regist">가입</button>
+	</div>
+	<table class="table">
+		<thead class="thead-dark">
+			<tr>
+				<th>회원번호</th>
+				<th>이름</th>
+				<th>아이디</th>
+				<th>이메일</th>
+			</tr>
+		</thead>
+		<tbody>
+		<template v-for="(member , i) in memberList">
+			<member v-bind:member_idx="member.member_idx" v-bind:name="member.name" v-bind:id="member.id" v-bind:email="member.email"/>
+		</template>
+		</tbody>
+	</table>
+
+
+
+	<div class="container">
+		<form action="/action_page.php">
+			<div class="form-group" id="form2">
+				<label for="pwd">ID:</label> <input type="text"
+					class="form-control" id="id2" placeholder="Enter ID"
+					name="id2">
+			</div>
+				<label for="pwd">Password:</label> <input type="password"
+					class="form-control" id="password2" placeholder="Enter password"
+					name="password2">
+			</div>
+			<div class="form-group">
+				<label for="pwd">Name:</label> <input type="text"
+					class="form-control" id="name2" placeholder="Enter Name"
+					name="name2">
+			</div>
+			<div class="form-group">
+				<label for="email">EMail:</label> <input type="email"
+					class="form-control" id="email2" placeholder="Enter email"
+					name="email2">
+			</div>
+			<button type="button" class="btn btn-primary">수정</button>
+			<button type="button" class="btn btn-primary">삭제</button>
+		</form>
+	</div>
+
+</div>
+</body>
+</html>

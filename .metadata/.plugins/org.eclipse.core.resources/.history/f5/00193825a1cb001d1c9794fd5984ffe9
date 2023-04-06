@@ -1,0 +1,7 @@
+package com.edu.wepet.domain;
+
+public class PreReservation {
+	
+	private pre_reservation_idx;
+
+}

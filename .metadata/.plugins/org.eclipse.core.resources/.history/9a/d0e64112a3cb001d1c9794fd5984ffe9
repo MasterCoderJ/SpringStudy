@@ -1,0 +1,5 @@
+package com.edu.wepet.model.prereservation;
+
+public class MyBatisPreReservationDAO {
+
+}

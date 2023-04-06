@@ -1,0 +1,71 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	                    http://www.springframework.org/schema/beans/spring-beans.xsd
+	                    http://www.springframework.org/schema/context
+	                    http://www.springframework.org/schema/context/spring-context.xsd
+	                    http://www.springframework.org/schema/aop
+	                    http://www.springframework.org/schema/aop/spring-aop.xsd">
+	<!--
+			이 어플리케이션에서 사용될 모든 객체들의 명단을 적으면 된다 
+			여기에 적어놓으면 스프링이 알아서 인스턴스를 생성하고 관리해준다
+			또한 필요한곳에 주입까지 해 준다
+	-->
+	<bean id="fripan" class="gui.cook.Fripan"/>
+	<bean id = "electPan" class="gui.cook.ElectPan"/>
+	<bean id="cook" class="gui.cook.Cook" />
+	
+	
+	<!-- 회원 가입에 필요한 컴포넌트를 등록하자 -->
+	<bean class="javax.swing.JTextField" id = "id">
+		<constructor-arg type="int" value="20"/>
+	</bean>
+	
+	<bean class="javax.swing.JTextField" id = "name">
+		<constructor-arg type="int" value="20"/>
+	</bean>
+	
+	<bean class="javax.swing.JTextField" id = "email">
+		<constructor-arg type="int" value="20"/>
+	</bean>
+	
+	<bean class="javax.swing.JButton" id = "regist">
+		<constructor-arg type="String" value="등록"/>
+	</bean>
+	
+	<bean class="java.awt.FlowLayout" id = "flow"/>
+	
+	<!-- join form이 필요한 bean들을 주입시키기 위해 (weaving)-->
+	<bean id="joinForm" class="gui.view.JoinForm" >
+		<property name="t_id" ref="id"/>
+		<property name="t_email" ref="email"/>	
+		<property name="t_name" ref="name"/>	
+		<property name="bt_regist" ref="regist"/>	
+		<property name="flowLayout" ref="flow"/>	
+	</bean>
+	
+	<!-- 학생 추가 -->
+	<bean class="gui.school.SchoolBell" id = "schoolBell"></bean>
+	<bean class="gui.school.Student" id= "student"/>
+	
+	<!-- 
+		AOP 적용하기
+		1) 공통 로직을 advisor로 둔다(bean으로 등록)
+		2) 공통 로직을 어느 시점, 어느 지점에 동작시킬지 지정해주어야한다, 즉 관점을 등록한다
+	 -->
+	 
+	<aop:config>
+	
+		<!-- 어떠한 공통 코드를 적용할지 그 객체의 레퍼런스 명시 -->
+		<!-- 관점 등록 -->
+		<aop:aspect ref="schoolBell">
+			<!-- 어떠한 지점(메서드)에서 공통 코드가 동작할지 서술 -->
+			<aop:pointcut expression="execution(public * gui.school.Student.*(..))" id="bellPointCut"/>
+			<!-- 어느 시점에 공통 코드가 동작할지-->
+			<aop:before method="ring" pointcut-ref="bellPointCut" />
+		</aop:aspect>
+	</aop:config>
+	
+</beans>

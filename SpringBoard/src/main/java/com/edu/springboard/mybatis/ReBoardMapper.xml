@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ReBoard">
+
+	<!-- 동물올림픽의 category==team, rank==step -->
+	<select id="selectAll" resultType="ReBoard">
+		select * from reboard order by team desc, step asc
+	</select>
+	
+	<select id="select" parameterType="int" resultType="ReBoard">
+		select* from reboard where reboard_idx=#{reboard_idx}
+	</select>
+	
+	<!-- 주의할점: 같은 insert문에서 nextval호출은 여러번해도, 오직 한번만 증가한다
+	MySql 이라면 insert~~~select last_insert_id()로 작업해야함
+	 -->
+	<insert id="insert" parameterType="ReBoard">
+		insert into reboard(reboard_idx, title, writer, content, team) 
+		values(seq_reboard.nextval, #{title}, #{writer}, #{content}, seq_reboard.nextval)
+	</insert>
+	
+	<update id="update" parameterType="ReBoard">
+		update reboard set title=#{title}, writer=#{writer}, content=#{content} where reboard_idx=#{reboard_idx}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete reboard where reboard_idx=#{reboard_idx}
+	</delete>
+	
+	<!-- 답변달기 DML업무 2개
+		자리확보+답변등록
+	 -->
+	 <!-- 자리확보 -->
+	
+	
+
+</mapper>

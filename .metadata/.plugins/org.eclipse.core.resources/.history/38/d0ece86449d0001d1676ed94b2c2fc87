@@ -1,0 +1,187 @@
+		
+        let nowMonth = new Date();  // 현재 달을 페이지를 로드한 날의 달로 초기화
+        let today = new Date();     // 페이지를 로드한 날짜를 저장
+        today.setHours(0, 0, 0, 0);    // 비교 편의를 위해 today의 시간을 초기화
+        
+
+        
+        // 달력 생성 : 해당 달에 맞춰 테이블을 만들고, 날짜를 채워 넣는다.
+        function buildCalendar() {
+
+            let firstDate = new Date(nowMonth.getFullYear(), nowMonth.getMonth(), 1);     // 이번달 1일
+            let lastDate = new Date(nowMonth.getFullYear(), nowMonth.getMonth() + 1, 0);  // 이번달 마지막날
+
+            let tbody_Calendar = document.querySelector(".Calendar > tbody");
+            document.getElementById("calYear").innerText = nowMonth.getFullYear();             // 연도 숫자 갱신
+            document.getElementById("calMonth").innerText = leftPad(nowMonth.getMonth() + 1);  // 월 숫자 갱신
+
+            while (tbody_Calendar.rows.length > 0) {       // 이전 출력결과가 남아있는 경우 초기화
+                tbody_Calendar.deleteRow(tbody_Calendar.rows.length - 1);
+            }
+
+            let nowRow = tbody_Calendar.insertRow();        // 첫번째 행 추가           
+
+            for (let i = 0; i < firstDate.getDay(); i++) {  // 이번달 1일의 요일만큼
+                let nowColumn = nowRow.insertCell();        // 열 추가
+            }
+
+            for (let nowDay = firstDate; nowDay <= lastDate; nowDay.setDate(nowDay.getDate() + 1)) {   // day는 날짜를 저장하는 변수, 이번달 마지막날까지 증가시키며 반복  
+
+                let nowColumn = nowRow.insertCell(); // 새 열을 추가
+
+                let newDIV = document.createElement("p");
+                
+                //날짜 p 태그에 함수 추가 
+                newDIV.addEventListener("click", function(){
+                	
+                	deleteHoliday(this);
+                	console.log(this.innerText);
+                });
+
+                dayBoxList.push(newDIV);
+
+                newDIV.innerHTML = leftPad(nowDay.getDate()); // 추가한 열에 날짜 입력
+                nowColumn.appendChild(newDIV);
+
+                if (nowDay.getDay() == 6) {  // 토요일인 경우
+                    nowRow = tbody_Calendar.insertRow();    // 새로운 행 추가
+                }
+
+                if (nowDay < today) {  // 지난날인 경우
+                    newDIV.className= "pastDay";
+                }else{ //이번달
+                	newDIV.className= "futureDay";
+                }
+            }
+        }
+
+        // 이전달 버튼 클릭
+        function prevCalendar() {
+            nowMonth = new Date(nowMonth.getFullYear(), nowMonth.getMonth() - 1, nowMonth.getDate());
+            dayBoxList=[];
+            buildCalendar();
+            getHolidayList();
+        }
+        // 다음달 버튼 클릭
+        function nextCalendar() {
+            nowMonth = new Date(nowMonth.getFullYear(), nowMonth.getMonth() + 1, nowMonth.getDate());
+            dayBoxList=[];
+            buildCalendar();
+            getHolidayList();
+        }
+
+        // input값이 한자리 숫자인 경우 앞에 '0' 붙혀주는 함수
+        function leftPad(value) {
+            if (value < 10) {
+                value = "0" + value;
+                return value;
+            }
+            return value;
+        }
+
+        //모달창 생성
+        function callModal() {
+
+            $("#bt_holiday").click(function () {
+                $("#calendarModal").modal("show");
+            });
+        }
+
+        //모달 창 내 등록버튼
+        function reigstModal() {
+            $("#addCalendar").click(function () {
+                registHoliday();
+            });
+        }
+
+        //모달로 휴무 등록할때
+        function registHoliday() {
+            var content = $("#calendar_content").val();
+            var start_date = $("#calendar_start_date").val();
+            var end_date = $("#calendar_end_date").val();
+
+            let strDate = new Date(start_date);
+            let endDate = new Date(end_date);
+            let nowDay = new Date();
+            
+            //내용 입력 여부 확인
+            if (content == null || content == "") {
+                alert("내용을 입력하세요.");
+            } else if (start_date == "" || end_date == "") {
+                alert("날짜를 입력하세요.");
+            } else if (new Date(end_date) - new Date(start_date) < 0) {
+                alert("종료일이 시작일보다 먼저입니다.");
+            } else if (strDate < nowDay && endDate < nowDay || strDate< nowDay && endDate> nowDay) {
+                alert("당일 또는 현재 보다 이전 날짜는 선택 하실 수 없습니다");
+            }
+            
+			if (strDate<=endDate && strDate>= nowDay && endDate>=nowDay) {
+				
+				//날짜 배열 제이슨 
+	            for(let i=getOnlyDate(start_date);i<=getOnlyDate(end_date);i++){
+		            let json={};
+		            json["yy"]=getOnlyYear(start_date),
+		            json["mm"]=getOnlyMonth(start_date),
+		            json["dd"]=i
+		            holidayBox.push(json);
+	            }
+            }else{
+            	return;
+            }
+            
+            $.ajax({
+            	url:"/rest/holiday",
+            	method:"post",
+            	//json 보낼때는 스트링화  JSON.stringify(dateList);
+            	data: 
+            		JSON.stringify(holidayBox)
+            	,
+            	dataType:"json",
+            	contentType:"application/json",
+            	success:function(result, status, xhr){
+            		alert(result.msg);
+            		holidayBox=[];
+            		getHolidayList();
+            	},
+            	error:function(xhr, status, err){
+            		alert("중복된 날짜에 휴무는 불가능합니다");
+            		location.reload();
+            	}
+            });
+            console.log("휴일 리스트 ", holidayBox);
+        }
+        
+        function getOnlyDate(str){
+            // 2022-03-15 
+            let arr=str.split("-");
+            return parseInt(arr[2]);
+        }
+        
+        
+        function getOnlyYear(str){
+            let arr=str.split("-");
+            return parseInt(arr[0]);
+        }
+        
+        
+        function getOnlyMonth(str){
+            let arr=str.split("-");
+            return parseInt(arr[1]);
+        }
+        
+		//모달창 속 달력에 날짜 제한 걸기
+		function limitDate(){
+			var now_utc = Date.now()
+			var timeOff = new Date().getTimezoneOffset()*60000;
+			var today = new Date(now_utc-timeOff).toISOString().split("T")[0];
+			var now= new Date();
+			var last = new Date(2023,now.getMonth()+1, 0);
+		    var lastDate= last.toISOString().split("T")[0];
+			
+			//console.log("last",lastDate);
+			document.getElementById("calendar_start_date").setAttribute("min", today);
+			document.getElementById("calendar_start_date").setAttribute("max", lastDate);
+			document.getElementById("calendar_end_date").setAttribute("min", today);
+			document.getElementById("calendar_end_date").setAttribute("max", lastDate);
+		}
+		

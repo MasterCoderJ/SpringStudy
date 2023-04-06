@@ -1,0 +1,21 @@
+package com.edu.wepet.mybatis;
+
+public class ReservationMapper {
+	
+	<insert id="insert" parameterType="Reservation">
+	insert into holiday(yy, mm, dd) values(#{yy},#{mm},#{dd})
+</insert>
+
+<select id="selectAll" resultType="Reservation">
+	select * from holiday order by holiday_idx desc
+</select>
+
+<select id="select" resultType="Reservation" parameterType="int">
+	select * from holiday where holiday_idx=#{holiday_idx}
+</select>
+
+<delete id="delete" parameterType="Reservation">
+	delete from holiday where yy=#{yy}, mm=#{mm}, dd=#{dd} 
+</delete>
+
+}

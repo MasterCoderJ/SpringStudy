@@ -1,0 +1,35 @@
+package com.edu.wepet.model.prereservation;
+
+import java.util.List;
+
+import com.edu.wepet.domain.PreReservation;
+
+public class MyBatisPreReservationDAO implements PreReservationDAO{
+
+	
+	private PreReservationDAO
+	@Override
+	public void insert(PreReservation preReservation) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List selectAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PreReservation select(int prereservation_idx) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void delete(PreReservation preReservation) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}
